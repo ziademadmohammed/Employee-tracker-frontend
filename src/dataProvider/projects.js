@@ -5,17 +5,16 @@ import { HttpError } from "react-admin";
 
 let dataProviderFunctions = {
   getList(resource, params, apiUrl) {
-    // let userData = JSON.parse(localStorage.getItem("auth"));
+    let userData = JSON.parse(localStorage.getItem("auth"));
 
     return axios
       .get(`${apiUrl}/api/project`, {
         headers: {
-          // "Content-Type": "application/json",
-          // Authorization: `${userData.token_type} ${userData.access_token}`,
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
         },
       })
       .then((response) => {
-        // (ValidatedData);
         return {
           data: response.data,
           total: response.data.length,
@@ -32,8 +31,14 @@ let dataProviderFunctions = {
       });
   },
   async getOne(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/project/${params.id}`, {})
+      .get(`${apiUrl}/api/project/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -50,18 +55,32 @@ let dataProviderFunctions = {
       });
   },
   async getMany(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     let ResolvedRequests = await Promise.all(
       params.ids.map((id) => {
-        return axios.get(`${apiUrl}/api/project/${id}`, {}).then((response) => {
-          return response.data;
-        });
+        return axios
+          .get(`${apiUrl}/api/project/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${userData.token_type} ${userData.access_token}`,
+            },
+          })
+          .then((response) => {
+            return response.data;
+          });
       })
     );
     return { data: ResolvedRequests };
   },
   delete(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .delete(`${apiUrl}/api/project/${params.id}`, {})
+      .delete(`${apiUrl}/api/project/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -78,8 +97,14 @@ let dataProviderFunctions = {
       });
   },
   create(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .post(`${apiUrl}/api/project`, params.data, {})
+      .post(`${apiUrl}/api/project`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -96,8 +121,14 @@ let dataProviderFunctions = {
       });
   },
   update(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .put(`${apiUrl}/api/project/${params.id}`, params.data, {})
+      .put(`${apiUrl}/api/project/${params.id}`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,

@@ -5,10 +5,15 @@ import { HttpError } from "react-admin";
 
 let dataProviderFunctions = {
   getList(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/dependent`, {})
+      .get(`${apiUrl}/api/dependent`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
-        console.log(response);
         return {
           data: response.data,
           total: response.data.length,
@@ -25,12 +30,17 @@ let dataProviderFunctions = {
       });
   },
   getOne(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
       .get(`${apiUrl}/api/dependent/${params.id}`, {
         params: {
           filters: {
             id: params.id,
           },
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
         },
       })
       .then((response) => {
@@ -49,10 +59,16 @@ let dataProviderFunctions = {
       });
   },
   async getMany(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     let ResolvedRequests = await Promise.all(
       params.ids.map((id) => {
         return axios
-          .get(`${apiUrl}/api/dependent/${id}`, {})
+          .get(`${apiUrl}/api/dependent/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${userData.token_type} ${userData.access_token}`,
+            },
+          })
           .then((response) => {
             return response.data;
           });
@@ -61,8 +77,14 @@ let dataProviderFunctions = {
     return { data: ResolvedRequests };
   },
   delete(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .delete(`${apiUrl}/api/dependent/${params.id}`, {})
+      .delete(`${apiUrl}/api/dependent/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -79,8 +101,14 @@ let dataProviderFunctions = {
       });
   },
   create(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .post(`${apiUrl}/api/dependent`, params.data, {})
+      .post(`${apiUrl}/api/dependent`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -97,8 +125,14 @@ let dataProviderFunctions = {
       });
   },
   update(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .put(`${apiUrl}/api/dependent/${params.id}`, params.data, {})
+      .put(`${apiUrl}/api/dependent/${params.id}`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,

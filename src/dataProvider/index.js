@@ -24,13 +24,10 @@ export default (
     resourselist[resource].getOne(resource, params, apiUrl),
 
   getMany: (resource, params) => {
-    console.log(resource, params, resourselist[resource]);
     return resourselist[resource].getMany(resource, params, apiUrl);
   },
 
   getManyReference: (resource, params) => {
-    console.log(resource, params);
-
     return resourselist[resource].getManyReference(resource, params, apiUrl);
   },
 

@@ -3,8 +3,14 @@ import { HttpError } from "react-admin";
 
 let dataProviderFunctions = {
   getList(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/department`, {})
+      .get(`${apiUrl}/api/department`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -22,8 +28,14 @@ let dataProviderFunctions = {
       });
   },
   getOne(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/department/${params.id}`, {})
+      .get(`${apiUrl}/api/department/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -40,20 +52,33 @@ let dataProviderFunctions = {
       });
   },
   getMany(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return Promise.all(
       params.ids.map((id) => {
-        console.log(id);
-        return axios.get(`${apiUrl}/api/department/${id}`).then((response) => {
-          return response.data;
-        });
+        return axios
+          .get(`${apiUrl}/api/department/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${userData.token_type} ${userData.access_token}`,
+            },
+          })
+          .then((response) => {
+            return response.data;
+          });
       })
     ).then((res) => ({
       data: res,
     }));
   },
   delete(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .delete(`${apiUrl}/api/department/${params.id}`, {})
+      .delete(`${apiUrl}/api/department/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -70,8 +95,14 @@ let dataProviderFunctions = {
       });
   },
   create(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .post(`${apiUrl}/api/department`, params.data, {})
+      .post(`${apiUrl}/api/department`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
@@ -88,8 +119,14 @@ let dataProviderFunctions = {
       });
   },
   update(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .put(`${apiUrl}/api/department/${params.id}`, params.data, {})
+      .put(`${apiUrl}/api/department/${params.id}`, params.data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: response.data,
