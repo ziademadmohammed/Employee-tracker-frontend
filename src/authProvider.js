@@ -11,7 +11,7 @@ function refreshToken() {
   }
   axios
     .post(
-      `https://visit-egypt.herokuapp.com/api/user/refresh`,
+      `https://localhost:8000/api/employee/login`,
       {
         access_token: currentToken,
         refresh_token: refreshToken,
@@ -31,14 +31,11 @@ function refreshToken() {
 export default {
   // called when the user attempts to log in
   login: ({ username: email, password }) => {
-    const request = new Request(
-      "https://visit-egypt.herokuapp.com/api/user/login",
-      {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: new Headers({ "Content-Type": "application/json" }),
-      }
-    );
+    const request = new Request("http://127.0.0.1:8000/api/employee/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: new Headers({ "Content-Type": "application/json" }),
+    });
     return fetch(request)
       .then((response) => {
         if (response.status < 200 || response.status >= 300) {
@@ -48,8 +45,8 @@ export default {
       })
       .then((auth) => {
         let decodedJWT = decodeJwt(auth.access_token);
-        if (decodedJWT.role === "USER")
-          throw new Error("not Authorized to use the Admin Panel");
+        // if (decodedJWT.role === "USER")
+        //   throw new Error("not Authorized to use the Admin Panel");
         localStorage.setItem("auth", JSON.stringify(auth));
       })
       .catch((err) => {
