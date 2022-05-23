@@ -8,6 +8,8 @@ import {
   required,
 } from "react-admin";
 import { Box } from "@mui/material";
+import { ReferenceInput } from "react-admin";
+import { SelectInput } from "react-admin";
 
 const UserEdit = (props) => {
   return (
@@ -31,6 +33,9 @@ const UserEdit = (props) => {
             <TextInput multiline source="description" fullWidth />
           </Box>
         </Box>
+        <ReferenceInput reference="departments" source="department_id">
+          <SelectInput optionText="name" optionValue="id" fullWidth />
+        </ReferenceInput>
       </SimpleForm>
     </Edit>
   );
