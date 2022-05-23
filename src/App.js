@@ -3,6 +3,7 @@ import * as React from "react";
 import { Admin, Resource } from "react-admin";
 
 import Dataprovider from "./dataProvider";
+import AuthProvider from "./authProvider";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme } from "@material-ui/core/styles";
 
@@ -44,7 +45,11 @@ const App = () => {
   checkForAuthExpiration();
   return (
     <ThemeProvider theme={baseTheme}>
-      <Admin dataProvider={dataProviderInstance} disableTelemetry>
+      <Admin
+        dataProvider={dataProviderInstance}
+        authProvider={AuthProvider}
+        disableTelemetry
+      >
         <Resource
           name="employees"
           list={UserList}

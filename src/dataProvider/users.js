@@ -5,10 +5,15 @@ import { HttpError } from "react-admin";
 
 let dataProviderFunctions = {
   getList(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/employee/`, {})
+      .get(`${apiUrl}/api/employee/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
-        console.log(response.data);
         return {
           data: response.data.map((employee) => ({
             ...employee,
@@ -28,8 +33,14 @@ let dataProviderFunctions = {
       });
   },
   async getOne(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .get(`${apiUrl}/api/employee/${params.id}`, {})
+      .get(`${apiUrl}/api/employee/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: { ...response.data, id: response.data.ssn },
@@ -46,12 +57,17 @@ let dataProviderFunctions = {
       });
   },
   async getMany(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     let ResolvedRequests = await Promise.all(
       params.ids.map((id) => {
         return axios
           .get(`${apiUrl}/api/employee`, {
             params: {
               user_id: id,
+            },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${userData.token_type} ${userData.access_token}`,
             },
           })
           .then((response) => {
@@ -62,8 +78,14 @@ let dataProviderFunctions = {
     return { data: ResolvedRequests };
   },
   delete(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
-      .delete(`${apiUrl}/api/employee/${params.id}`, {})
+      .delete(`${apiUrl}/api/employee/${params.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+      })
       .then((response) => {
         return {
           data: { ...response.data, id: response.data.ssn },
@@ -80,10 +102,15 @@ let dataProviderFunctions = {
       });
   },
   create(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
       .post(`${apiUrl}/api/employee`, params.data, {
         params: {
           user_id: params.id,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
         },
         data: params.data,
       })
@@ -103,9 +130,14 @@ let dataProviderFunctions = {
       });
   },
   update(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
     return axios
       .put(`${apiUrl}/api/employee/${params.id}`, params.data, {
         data: params.data,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
       })
       .then((response) => {
         return {
@@ -122,15 +154,26 @@ let dataProviderFunctions = {
         );
       });
   },
-  updateUserRole(resource, params, apiUrl) {
+
+  async getManyReference(resource, params, apiUrl) {},
+  AssignProject(resource, params, apiUrl) {
+    let userData = JSON.parse(localStorage.getItem("auth"));
+    console.log(params);
+
     return axios
-      .put(
-        `${apiUrl}/api/employee/role/${params.id}?updated_user_role=${params.role}`,
-        {}
-      )
+      .post(`${apiUrl}/api/employee/assign`, params, {
+        params: {
+          user_id: params.id,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${userData.token_type} ${userData.access_token}`,
+        },
+        data: params,
+      })
       .then((response) => {
         return {
-          data: response.data,
+          data: { ...response.data, id: response.data.ssn },
         };
       })
       .catch((err) => {
@@ -143,7 +186,6 @@ let dataProviderFunctions = {
         );
       });
   },
-  async getManyReference(resource, params, apiUrl) {},
 };
 
 export default dataProviderFunctions;
